@@ -10,6 +10,10 @@ import {
   ApolloProvider
 } from "@apollo/client";
 
+import {
+  BrowserRouter as Router,
+} from "react-router-dom";
+
 const client = new ApolloClient({
   uri: 'https://graphql-pokeapi.graphcdn.app',
   cache: new InMemoryCache({
@@ -37,7 +41,9 @@ ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <GlobalStyles />
+      <Router>
       <App />
+      </Router>
     </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root')

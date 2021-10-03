@@ -41,15 +41,16 @@ const ListPokemon = () => {
 
     let renderPokemons = data.pokemons.results || [];
 
-    const ListPokemon = renderPokemons.map(({ id, name }) => {
+    const ListPokemon = renderPokemons.map(({ id, name,image }) => {
         let link = `/pokemon/${name}`
         let countPokemon = pokemonOwned.filter(OwnedPokemon => OwnedPokemon.pokemon_data_id === id).length  
         return (<div key={id}>
           <p>
             <Link to={link}>{id}: {name}</Link>
           </p>
+          <img src={image} alt="{name}"/>
           <p>
-            You Have Owned {countPokemon} {name}
+            Owned {countPokemon} {name}
           </p>
         </div>
     )});

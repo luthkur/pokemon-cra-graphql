@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
   Link,
+  useHistory
 } from "react-router-dom";
 
 import Home from './components/Home';
@@ -25,12 +25,18 @@ const AppHeader = styled.header`
   color: white;
 `;
 
+
+
 function App() {
+  const history = useHistory();
+
+  function handleClick() {
+    history.push("/");
+  }
   return (
     <AppContainer>
       <AppHeader>
     <div className="App">
-      <Router>
       <div>
         <ul>
           <li>
@@ -42,6 +48,10 @@ function App() {
         </ul>
 
         <hr />
+        <button
+          onClick={handleClick}>
+          Go home
+        </button>
         <Switch>
           <Route exact path="/">
             <Home />
@@ -54,7 +64,6 @@ function App() {
           </Route>
         </Switch>
       </div>
-    </Router>
     </div>
     </AppHeader>
     </AppContainer>

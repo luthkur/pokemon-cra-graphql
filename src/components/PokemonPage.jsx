@@ -36,7 +36,7 @@ const PokemonDetail = (params) => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const onSubmit = data => {
         let pokemonData = JSON.parse(data.pokemondata);
-        setPokemonOwned(pokemonOwned => [...pokemonOwned, {owned_id: uuidv4(), pokemon_data_id: pokemonData.id, name: pokemonData.name, nickname: data.nickname}]);
+        setPokemonOwned(pokemonOwned => [...pokemonOwned, {owned_id: uuidv4(), pokemon_data: pokemonData, nickname: data.nickname}]);
         setgetPokemon(false);
         setCatchMessage(null)
     }
@@ -77,19 +77,40 @@ const PokemonDetail = (params) => {
             {/* errors will return when field validation fails  */}
             {errors.nickname && <span>This field is required</span>}
             
-            <input type="submit" />
+            <input type="submit" value="Submit Name"/>
             </form>
         </div>
         catchButton = null;
     }
+
+    let moves = data.pokemon.moves.map(({move}) => <li>
+      {move.name}
+    </li>);
+    let types = data.pokemon.types.map(({type}) => <li>
+    {type.name}
+  </li>);
     return (
       <div>
         <p>
           {data.pokemon.name}          
         </p>
+        <img src={data.pokemon.sprites.front_default} alt={data.pokemon.name}/>
+        <br/>
         {catchMessage}
         {catchButton}
         {nickNameForm}
+        <p>
+          Moves :
+          </p>
+        <ol>
+          {moves}
+        </ol>
+        <p>
+          Types :
+        </p>
+        <ol>
+          {types}
+        </ol>
       </div>
     );
   };
