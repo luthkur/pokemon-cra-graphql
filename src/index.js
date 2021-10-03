@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import GlobalStyles from "./global-styles";
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
@@ -20,6 +20,7 @@ const client = new ApolloClient({
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
+      <GlobalStyles />
       <App />
     </ApolloProvider>
   </React.StrictMode>,

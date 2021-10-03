@@ -1,5 +1,6 @@
 import usePersistedState from 'use-persisted-state-hook';
-import './App.css';
+import { v4 as uuidv4 } from 'uuid';
+import styled from "@emotion/styled";
 import {
   BrowserRouter as Router,
   Switch,
@@ -52,12 +53,28 @@ query pokemon($name: String!) {
 `;
 
 const gqlVariables = {
-  limit: 2,
+  limit: 10,
   offset: 0,
 };
 
+const AppContainer = styled.div`
+  text-align: center;
+`;
+
+const AppHeader = styled.header`
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+`;
+
 
 export const ListPokemon = () => {
+  const [pokemonOwned, setPokemonOwned] = usePersistedState('pokemonOwned', [])
   const { loading, error, data } = useQuery(GET_POKEMONS, {
     variables: gqlVariables,
   });
@@ -68,9 +85,13 @@ export const ListPokemon = () => {
   console.log('Response from server', data);
   return data.pokemons.results.map(({ id, name }) => {
     let link = `/pokemon/${name}`
+    let countPokemon = pokemonOwned.filter(OwnedPokemon => OwnedPokemon.pokemon_data_id === id).length  
     return (<div key={id}>
       <p>
         <Link to={link}>{id}: {name}</Link>
+      </p>
+      <p>
+        {countPokemon}
       </p>
     </div>
     )
@@ -79,6 +100,7 @@ export const ListPokemon = () => {
 };
 
 export const PokemonDetail = (params) => {
+  const [pokemonOwned, setPokemonOwned] = usePersistedState('pokemonOwned', [])
   const { loading, error, data } = useQuery(GET_POKEMON_DETAIL, {variables: params});
 
   if (loading) return 'Loading...';
@@ -86,20 +108,51 @@ export const PokemonDetail = (params) => {
 
   console.log('Response from server', data);
   return (
+    <div>
       <p>
         {data.pokemon.name}          
       </p>
+      <button onClick={() => 
+        {
+          if (Math.random() < 0.5)  {
+            console.log("success catch")
+            return setPokemonOwned(pokemonOwned => [...pokemonOwned, {owned_id: uuidv4(), pokemon_data_id: data.pokemon.id, name: data.pokemon.name}])
+          }
+          else {
+            console.log("failed  catch")
+          }
+        }
+      }>Add Pokemon</button>
+    </div>
   );
 };
 
-function Counter() {
-  const [count, setCount] = usePersistedState('count', 0)
+export const MyPokemonList = (props) => {
+  let { pokemonOwned,setPokemonOwned } = props;
+  return pokemonOwned.map(({ owned_id, name }, index) => {
+    return (
+      <div key={owned_id}>
+        <p>{name}</p>
+        <button owned_id={owned_id} onClick={(e) => {
+          const owned_id = e.target.getAttribute("owned_id")
+          setPokemonOwned(pokemonOwned.filter(pokemon => pokemon.owned_id !== owned_id))
+        }
+        }></button>
+      </div>
+    )
+  })
+}
 
+function PokemonOwned() {
+  const [pokemonOwned, setPokemonOwned] = usePersistedState('pokemonOwned', [])
   return (
     <div>
-      <div>Count is {count}</div>
-      <button onClick={() => setCount(count + 1)}>Increment</button>
-      <button onClick={() => setCount(count - 1)}>Decrement</button>
+      <div>
+      <MyPokemonList pokemonOwned={pokemonOwned} setPokemonOwned={setPokemonOwned}/>
+      </div>
+      
+      <button onClick={() => setPokemonOwned(pokemonOwned => [...pokemonOwned, {id: 1, name: "Bulbasaurus"}])}>Add Pokemon</button>
+      <button onClick={() => setPokemonOwned(pokemonOwned => [...(pokemonOwned.slice(0,pokemonOwned.length-1))])}>Remove Pokemon</button>
     </div>
   )
 }
@@ -108,6 +161,8 @@ function Counter() {
 
 function App() {
   return (
+    <AppContainer>
+      <AppHeader>
     <div className="App">
       <Router>
       <div>
@@ -121,14 +176,6 @@ function App() {
         </ul>
 
         <hr />
-
-        {/*
-          A <Switch> looks through all its children <Route>
-          elements and renders the first one whose path
-          matches the current URL. Use a <Switch> any time
-          you have multiple routes, but you want only one
-          of them to render at a time
-        */}
         <Switch>
           <Route exact path="/">
             <Home />
@@ -143,6 +190,8 @@ function App() {
       </div>
     </Router>
     </div>
+    </AppHeader>
+    </AppContainer>
   );
 }
 
@@ -159,7 +208,7 @@ function MyPokemon() {
   return (
     <div>
       <h2>MyPokemon</h2>
-      <Counter></Counter>
+      <PokemonOwned></PokemonOwned>
     </div>
   );
 }
