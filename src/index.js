@@ -12,7 +12,25 @@ import {
 
 const client = new ApolloClient({
   uri: 'https://graphql-pokeapi.graphcdn.app',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          pokemons: {
+              // The keyArgs list and merge function are the same as above.
+              keyArgs: [],
+              merge(existing = {results: []}, incoming) {
+                let objectParams = {};
+                objectParams = Object.assign(objectParams, incoming);
+                if(existing) objectParams.results = [...existing.results , ...objectParams.results];
+                return objectParams;
+              },
+          }       
+          }      
+        }
+      }
+    }
+  )
 });
 
 ReactDOM.render(
