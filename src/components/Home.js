@@ -49,7 +49,7 @@ const ListPokemon = () => {
             <Link to={link}>{id}: {name}</Link>
           </p>
           <p>
-            {countPokemon}
+            You Have Owned {countPokemon} {name}
           </p>
         </div>
     )});

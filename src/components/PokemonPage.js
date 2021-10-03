@@ -38,6 +38,7 @@ const PokemonDetail = (params) => {
         let pokemonData = JSON.parse(data.pokemondata);
         setPokemonOwned(pokemonOwned => [...pokemonOwned, {owned_id: uuidv4(), pokemon_data_id: pokemonData.id, name: pokemonData.name, nickname: data.nickname}]);
         setgetPokemon(false);
+        setCatchMessage(null)
     }
 
     let nickNameForm = null;
@@ -48,7 +49,7 @@ const PokemonDetail = (params) => {
             setgetPokemon(true);
           }
           else {
-            setCatchMessage(<p>faileded to catch</p>)
+            setCatchMessage(<p>failed to catch</p>)
           }
         }
       }>Catch Pokemon</button>
