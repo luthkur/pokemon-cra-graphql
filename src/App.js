@@ -50,7 +50,7 @@ function App() {
         <hr />
         <button
           onClick={handleClick}>
-          Go home
+          Go to Pokemon List
         </button>
         <Switch>
           <Route exact path="/">

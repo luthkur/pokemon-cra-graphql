@@ -70,7 +70,7 @@ const ListPokemon = () => {
 const Home = function() {
     return (
       <div>
-        <h2>Home</h2>
+        <h2>Pokemon List</h2>
         <ListPokemon></ListPokemon>
       </div>
     );
