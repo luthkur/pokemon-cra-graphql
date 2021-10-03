@@ -74,7 +74,7 @@ const AppHeader = styled.header`
 
 
 export const ListPokemon = () => {
-  const [pokemonOwned, setPokemonOwned] = usePersistedState('pokemonOwned', [])
+  const [pokemonOwned] = usePersistedState('pokemonOwned', [])
   const { loading, error, data } = useQuery(GET_POKEMONS, {
     variables: gqlVariables,
   });
@@ -100,7 +100,7 @@ export const ListPokemon = () => {
 };
 
 export const PokemonDetail = (params) => {
-  const [pokemonOwned, setPokemonOwned] = usePersistedState('pokemonOwned', [])
+  const [setPokemonOwned] = usePersistedState('pokemonOwned', [])
   const { loading, error, data } = useQuery(GET_POKEMON_DETAIL, {variables: params});
 
   if (loading) return 'Loading...';
